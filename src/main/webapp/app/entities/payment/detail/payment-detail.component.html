@@ -1,0 +1,111 @@
+<div class="d-flex justify-content-center">
+  <div class="py-4 px-12">
+    <div *ngIf="payment">
+      <!-- <h2 data-cy="paymentDetailsHeading"><span>Payment</span></h2> -->
+      <div class="col-lg-8" style="margin-left: 20%; padding-right: 70px">
+        <h1 class="display-6" style="color: #200a49bd; font-weight: 700">Submit Payment</h1>
+        <p style="font-size: 13px">
+          To submit an SEC Filling Fee payment using ACH,Credit or Debit Card, enter the below information and click NEXT. You will then
+          verify your CIK and contact information before selecting a payment type and entering your payment information.
+        </p>
+        <p style="font-size: 14px">
+          Please note: ACH payments take 1-3 business days before being reflected in EDGAR. Credit and Debit Card transactions will appear
+          in EDGAR in [TBD] hours.
+        </p>
+      </div>
+      <div>
+        <div class="" style="height: 43px; background-color: #b3ffff; margin-left: 240px; margin-right: 240px">
+          <h5 class="" style="justify-content: center; padding-left: 250px; padding-top: 5px">Confirm information</h5>
+        </div>
+        <div
+          id="credit-card"
+          class="tab-pane fade show active pt-3"
+          style="margin-left: 20%; margin-right: 20%; padding-left: 150px; background-color: #f0f5f5"
+        >
+          <span style="font-size: 12px; color: #212529"
+            >Please review the information belew, then click PROCEED TO PAYMENT return to the previous screen by clicking back</span
+          >
+          <div style="padding-top: 5px">
+            <h4 id="jhi-payment-heading">Your credentials and payment amount</h4>
+          </div>
+          <!--  -->
+          <div class="form-group">
+            <label class="form-label" for="field_cik"><h6 style="margin-top: 5px">CIK*</h6></label>
+            <div class="input-group" style="width: 250px">
+              <dd>
+                <span>{{ payment.cik }}</span>
+              </dd>
+            </div>
+          </div>
+          <!--  -->
+          <div class="form-group">
+            <label class="form-label" for="field_ccc"><h6 style="margin-top: 15px">Company name</h6></label>
+            <div class="input-group" style="width: 250px">
+              <span>Stage penetration Test</span>
+            </div>
+          </div>
+          <!--  -->
+          <div class="form-group">
+            <label class="form-label" for="field_ccc"><h6 style="margin-top: 15px">Date of last payment</h6></label>
+            <div class="input-group" style="width: 250px">
+              <dd>
+                <span style="font-size: 11px; font-weight: 500"> There is no payment date associated with the CIK: {{ payment.cik }}</span>
+              </dd>
+            </div>
+          </div>
+          <!--  -->
+          <div class="form-group">
+            <label class="form-label" for="field_amount"><h6 style="margin-top: 15px">Payment Amount*</h6></label>
+            <div class="input-group" style="width: 250px">
+              <dd>
+                <span>{{ payment.paymentAmout }}</span>
+              </dd>
+            </div>
+          </div>
+          <!--  -->
+          <div class="" style="margin-top: 15px">
+            <h4>Your contact information</h4>
+          </div>
+          <!--  -->
+          <div class="form-group">
+            <label class="form-label" for="field_name"><h6 style="margin-top: 15px">Name*</h6></label>
+            <div class="input-group" style="width: 350px">
+              <dd>
+                <span>{{ payment.name }}</span>
+              </dd>
+              <!-- <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" placeholder="test" required> -->
+            </div>
+          </div>
+          <!--  -->
+          <div class="form-group">
+            <label class="form-label" for="field_email"><h6 style="margin-top: 15px">Email*</h6></label>
+            <div class="input-group" style="width: 350px">
+              <dd>
+                <span>{{ payment.email }}</span>
+              </dd>
+              <!-- <input type="text" class="form-control" name="email" id="field_email" data-cy="email" formControlName="email" placeholder="test@gmail.com" required> -->
+            </div>
+          </div>
+          <!--  -->
+          <div class="form-group">
+            <label class="form-label" for="field_phone"><h6 style="margin-top: 15px">Phone*</h6></label>
+            <div class="input-group" style="width: 350px">
+              <dd>
+                <span>{{ payment.phone }}</span>
+              </dd>
+              <!-- <input type="number" class="form-control" name="phone" id="field_phone" data-cy="phone" formControlName="phone" placeholder="1234567890" required> -->
+            </div>
+          </div>
+          <!--  -->
+          <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+            <span>Back</span>
+          </button>
+
+          <button type="button" (click)="save()" class="btn btn-primary">
+            <span>Proceed to payment</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

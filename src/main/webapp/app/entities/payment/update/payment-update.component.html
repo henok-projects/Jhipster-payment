@@ -1,0 +1,227 @@
+<div class="container-fluid py-4 px-12">
+  <div class="tab-content">
+    <div class="col-lg-8" style="margin-left: 20%; padding-right: 70px">
+      <h1 class="display-6" style="color: #200a49bd; font-weight: 700">Submit Payment</h1>
+      <p style="font-size: 13px">
+        To submit an SEC Filling Fee payment using ACH,Credit or Debit Card, enter the below information and click NEXT. You will then
+        verify your CIK and contact information before selecting a payment type and entering your payment information.
+      </p>
+      <p style="font-size: 14px">
+        Please note: ACH payments take 1-3 business days before being reflected in EDGAR. Credit and Debit Card transactions will appear in
+        EDGAR in [TBD] hours.
+      </p>
+    </div>
+    <div class="">
+      <div class="" style="height: 43px; background-color: #b3ffff; margin-left: 240px; margin-right: 240px">
+        <h5 class="" style="justify-content: center; padding-left: 250px; padding-top: 5px">Enter the information</h5>
+      </div>
+      <div
+        id="credit-card"
+        class="tab-pane fade show active pt-3"
+        style="margin-left: 20%; margin-right: 20%; padding-left: 150px; background-color: #f0f5f5"
+      >
+        <form name="editForm" role="form" novalidate [formGroup]="editForm">
+          <div style="padding-top: 5px">
+            <h4 id="jhi-payment-heading">Your credentials and payment amount</h4>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field_cik"><h6 style="margin-top: 5px">CIK*</h6></label>
+            <div class="input-group" style="width: 250px">
+              <input
+                type="number"
+                placeholder="123"
+                class="form-control"
+                name="cik"
+                id="field_cik"
+                data-cy="cik"
+                formControlName="cik"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field_ccc"><h6 style="margin-top: 15px">CCC*</h6></label>
+            <div class="input-group" style="width: 250px">
+              <input
+                type="text"
+                class="form-control"
+                name="ccc"
+                id="field_ccc"
+                data-cy="ccc"
+                formControlName="ccc"
+                placeholder="1234"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field_amount"><h6 style="margin-top: 15px">Payment Amount*</h6></label>
+            <div class="input-group" style="width: 250px">
+              <input
+                type="number"
+                class="form-control"
+                name="paymentAmout"
+                id="field_paymentAmout"
+                data-cy="paymentAmout"
+                formControlName="paymentAmout"
+                placeholder="12345"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="" style="margin-top: 15px">
+            <h4>Your contact information</h4>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field_name"><h6 style="margin-top: 15px">Name*</h6></label>
+            <div class="input-group" style="width: 350px">
+              <input
+                type="text"
+                class="form-control"
+                name="name"
+                id="field_name"
+                data-cy="name"
+                formControlName="name"
+                placeholder="test"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field_email"><h6 style="margin-top: 15px">Email*</h6></label>
+            <div class="input-group" style="width: 350px">
+              <input
+                type="text"
+                class="form-control"
+                name="email"
+                id="field_email"
+                data-cy="email"
+                formControlName="email"
+                placeholder="test@gmail.com"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field_phone"><h6 style="margin-top: 15px">Phone*</h6></label>
+            <div class="input-group" style="width: 350px">
+              <input
+                type="number"
+                class="form-control"
+                name="phone"
+                id="field_phone"
+                data-cy="phone"
+                formControlName="phone"
+                placeholder="1234567890"
+                required
+              />
+            </div>
+          </div>
+          <div class="grid grid-clos-2" style="display: flex; padding-bottom: 15px">
+            <div class="" style="margin-top: 15px">
+              <button
+                type="button"
+                id="cancel-save"
+                data-cy="entityCreateCancelButton"
+                class="btn btn-secondary"
+                (click)="previousState()"
+                style="background-color: rgba(117, 116, 116, 0.692); border: rgba(117, 116, 116, 0.692)"
+              >
+                Clear
+              </button>
+            </div>
+            <div class="" style="margin-left: 60px; margin-top: 15px">
+              <button
+                type="submit"
+                id="save-entity"
+                data-cy="entityCreateSaveButton"
+                [disabled]="editForm.invalid || isSaving"
+                class="btn btn-primary"
+                (click)="save()"
+                [routerLink]="['/payment/view']"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-payment-heading" data-cy="PaymentCreateUpdateHeading">Create or edit a Payment</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_cik">Cik</label>
+          <input type="number" class="form-control" name="cik" id="field_cik" data-cy="cik" formControlName="cik" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_ccc">Ccc</label>
+          <input type="text" class="form-control" name="ccc" id="field_ccc" data-cy="ccc" formControlName="ccc" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_paymentAmout">Payment Amout</label>
+          <input
+            type="number"
+            class="form-control"
+            name="paymentAmout"
+            id="field_paymentAmout"
+            data-cy="paymentAmout"
+            formControlName="paymentAmout"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_email">Email</label>
+          <input type="text" class="form-control" name="email" id="field_email" data-cy="email" formControlName="email" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_phone">Phone</label>
+          <input type="number" class="form-control" name="phone" id="field_phone" data-cy="phone" formControlName="phone" />
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div> -->

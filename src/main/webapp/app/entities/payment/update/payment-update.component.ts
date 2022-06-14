@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/typedef
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -13,7 +13,7 @@ import { PaymentService } from '../service/payment.service';
   selector: 'jhi-payment-update',
   templateUrl: './payment-update.component.html',
 })
-export class PaymentUpdateComponent {
+export class PaymentUpdateComponent implements OnInit {
   isSaving = false;
   // eslint-disable-next-line @typescript-eslint/typedef
   s!: string;
@@ -22,6 +22,8 @@ export class PaymentUpdateComponent {
   maxlength: any = 11;
   length!: number;
   value!: any;
+  payment: any;
+  pay: any;
 
   editForm = this.fb.group({
     id: [],
@@ -35,6 +37,18 @@ export class PaymentUpdateComponent {
 
   constructor(protected paymentService: PaymentService, protected activatedRoute: ActivatedRoute, protected fb: FormBuilder) {
     // this.maxlength =11;
+  }
+  ngOnInit(): void {
+    this.pay = sessionStorage.getItem('payment');
+    this.payment = JSON.parse(this.pay);
+    this.editForm.patchValue({
+      cik: this.payment.cik,
+      ccc: this.payment.ccc,
+      paymentAmout: this.payment.paymentAmout,
+      name: this.payment.name,
+      email: this.payment.email,
+      phone: this.payment.phone,
+    });
   }
 
   // ngOnInit(): void {

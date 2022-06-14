@@ -27,7 +27,7 @@ export class PaymentUpdateComponent {
     id: [],
     cik: [null, [Validators.required]],
     ccc: [null, [Validators.required, Validators.pattern('((?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#]).{8,30})')]],
-    paymentAmount: [null, [Validators.required]],
+    paymentAmout: [null, [Validators.required]],
     name: [null, [Validators.required]],
     email: [null, [Validators.required, Validators.email]],
     phone: [null, [Validators.required]],

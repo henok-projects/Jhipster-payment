@@ -51,7 +51,6 @@ export class PaymentDetailComponent implements OnInit {
   }
   previousState(): void {
     sessionStorage.getItem('payment');
-
     window.history.back();
   }
 

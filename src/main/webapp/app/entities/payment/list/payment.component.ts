@@ -13,6 +13,8 @@ import { PaymentDeleteDialogComponent } from '../delete/payment-delete-dialog.co
 export class PaymentComponent implements OnInit {
   payments?: IPayment[];
   isLoading = false;
+  pay: any;
+  payment: any;
 
   constructor(protected paymentService: PaymentService, protected modalService: NgbModal) {}
 
@@ -20,9 +22,12 @@ export class PaymentComponent implements OnInit {
     this.isLoading = true;
 
     this.paymentService.query().subscribe({
-      next: (res: HttpResponse<IPayment[]>) => {
+      next: (res: HttpResponse<string>) => {
         this.isLoading = false;
-        this.payments = res.body ?? [];
+        this.pay = res.body ?? '';
+
+        this.payment = JSON.parse(JSON.stringify(this.pay));
+        // this.payments = res.body ?? "";
       },
       error: () => {
         this.isLoading = false;

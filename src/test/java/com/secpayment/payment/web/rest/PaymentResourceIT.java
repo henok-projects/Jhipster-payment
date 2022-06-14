@@ -30,8 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class PaymentResourceIT {
 
-    private static final Integer DEFAULT_CIK = 1;
-    private static final Integer UPDATED_CIK = 2;
+    private static final String DEFAULT_CIK = "";
+    private static final String UPDATED_CIK = "";
 
     private static final String DEFAULT_CCC = "AAAAAAAAAA";
     private static final String UPDATED_CCC = "BBBBBBBBBB";

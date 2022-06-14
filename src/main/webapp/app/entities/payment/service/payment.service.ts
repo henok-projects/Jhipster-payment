@@ -32,9 +32,9 @@ export class PaymentService {
     return this.http.get<IPayment>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<HttpResponse<string>> {
     const options = createRequestOption(req);
-    return this.http.get<IPayment[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http.get<string>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {

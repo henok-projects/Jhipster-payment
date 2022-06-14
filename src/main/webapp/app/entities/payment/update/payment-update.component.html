@@ -27,6 +27,7 @@
           <div class="form-group">
             <label class="form-label" for="field_cik"><h6 style="margin-top: 5px">CIK*</h6></label>
             <div class="input-group" style="width: 250px">
+              <!-- onblur="while(this.value.length<parseInt(this.getAttribute('maxlength')))this.value='0'+this.value;" -->
               <input
                 type="number"
                 placeholder="123"
@@ -35,16 +36,21 @@
                 id="field_cik"
                 data-cy="cik"
                 formControlName="cik"
+                type="text"
+                maxlength="{{ maxlength }}"
+                (keyup)="onKey($event)"
                 required
               />
             </div>
+            <small class="form-text text-danger" *ngIf="editForm.get('cik')?.errors?.required"> This field is required. </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('cik')?.errors?.maxlength"> This field maxlength is 10. </small>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="field_ccc"><h6 style="margin-top: 15px">CCC*</h6></label>
             <div class="input-group" style="width: 250px">
               <input
-                type="text"
+                type="password"
                 class="form-control"
                 name="ccc"
                 id="field_ccc"
@@ -54,6 +60,10 @@
                 required
               />
             </div>
+            <small class="form-text text-danger" *ngIf="editForm.get('ccc')?.errors?.required"> This field is required. </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('ccc')?.errors?.pattern">
+              This field should follow the patter for "ccc".
+            </small>
           </div>
 
           <div class="form-group">
@@ -62,14 +72,15 @@
               <input
                 type="number"
                 class="form-control"
-                name="paymentAmout"
-                id="field_paymentAmout"
+                name="paymentAmount"
+                id="field_paymentAmount"
                 data-cy="paymentAmout"
-                formControlName="paymentAmout"
+                formControlName="paymentAmount"
                 placeholder="12345"
                 required
               />
             </div>
+            <small class="form-text text-danger" *ngIf="editForm.get('paymentAmount')?.errors?.required"> This field is required. </small>
           </div>
 
           <div class="" style="margin-top: 15px">
@@ -90,13 +101,14 @@
                 required
               />
             </div>
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required"> This field is required. </small>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="field_email"><h6 style="margin-top: 15px">Email*</h6></label>
             <div class="input-group" style="width: 350px">
               <input
-                type="text"
+                type="email"
                 class="form-control"
                 name="email"
                 id="field_email"
@@ -106,6 +118,10 @@
                 required
               />
             </div>
+            <small class="form-text text-danger" *ngIf="editForm.get('email')?.errors?.required"> This field is required. </small>
+            <small class="form-text text-danger" *ngIf="editForm.get('email')?.errors?.email">
+              This field is required email pattern.
+            </small>
           </div>
 
           <div class="form-group">
@@ -122,15 +138,14 @@
                 required
               />
             </div>
+            <small class="form-text text-danger" *ngIf="editForm.get('phone')?.errors?.required"> This field is required. </small>
           </div>
           <div class="grid grid-clos-2" style="display: flex; padding-bottom: 15px">
             <div class="" style="margin-top: 15px">
               <button
                 type="button"
-                id="cancel-save"
-                data-cy="entityCreateCancelButton"
                 class="btn btn-secondary"
-                (click)="previousState()"
+                (click)="clear()"
                 style="background-color: rgba(117, 116, 116, 0.692); border: rgba(117, 116, 116, 0.692)"
               >
                 Clear

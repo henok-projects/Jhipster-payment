@@ -18,7 +18,7 @@ public class Payment implements Serializable {
     private Long id;
 
     @Column(name = "cik")
-    private Integer cik;
+    private String cik;
 
     @Column(name = "ccc")
     private String ccc;
@@ -50,16 +50,16 @@ public class Payment implements Serializable {
         this.id = id;
     }
 
-    public Integer getCik() {
+    public String getCik() {
         return this.cik;
     }
 
-    public Payment cik(Integer cik) {
+    public Payment cik(String cik) {
         this.setCik(cik);
         return this;
     }
 
-    public void setCik(Integer cik) {
+    public void setCik(String cik) {
         this.cik = cik;
     }
 

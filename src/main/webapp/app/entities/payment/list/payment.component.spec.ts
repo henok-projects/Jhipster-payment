@@ -25,14 +25,14 @@ describe('Payment Management Component', () => {
     service = TestBed.inject(PaymentService);
 
     const headers = new HttpHeaders();
-    jest.spyOn(service, 'query').mockReturnValue(
-      of(
-        new HttpResponse({
-          body: [{ id: 123 }],
-          headers,
-        })
-      )
-    );
+    // jest.spyOn(service, 'query').mockReturnValue(
+    //   of(
+    //     new HttpResponse({
+    //       body: [{ id: 123 }],
+    //       headers,
+    //     })
+    //   )
+    // );
   });
 
   it('Should call load all on init', () => {

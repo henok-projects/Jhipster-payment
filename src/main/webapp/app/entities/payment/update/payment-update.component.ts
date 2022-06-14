@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+// eslint-disable-next-line @typescript-eslint/typedef
+import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -12,27 +13,75 @@ import { PaymentService } from '../service/payment.service';
   selector: 'jhi-payment-update',
   templateUrl: './payment-update.component.html',
 })
-export class PaymentUpdateComponent implements OnInit {
+export class PaymentUpdateComponent {
   isSaving = false;
+  // eslint-disable-next-line @typescript-eslint/typedef
+  s!: string;
+  // eslint-disable-next-line @typescript-eslint/typedef
+  x!: string;
+  maxlength: any = 11;
+  length!: number;
+  value!: any;
 
   editForm = this.fb.group({
     id: [],
-    cik: [],
-    ccc: [],
-    paymentAmout: [],
-    name: [],
-    email: [],
-    phone: [],
+    cik: [null, [Validators.required]],
+    ccc: [null, [Validators.required, Validators.pattern('((?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#]).{8,30})')]],
+    paymentAmount: [null, [Validators.required]],
+    name: [null, [Validators.required]],
+    email: [null, [Validators.required, Validators.email]],
+    phone: [null, [Validators.required]],
   });
 
-  constructor(protected paymentService: PaymentService, protected activatedRoute: ActivatedRoute, protected fb: FormBuilder) {}
+  constructor(protected paymentService: PaymentService, protected activatedRoute: ActivatedRoute, protected fb: FormBuilder) {
+    // this.maxlength =11;
+  }
 
-  ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ payment }) => {
-      this.updateForm(payment);
+  // ngOnInit(): void {
+  //   this.activatedRoute.data.subscribe(({ payment }) => {
+  //     this.updateForm(payment);
+  //   });
+  // sessionStorage.setItem('key', 'value');
+  // const data = sessionStorage.getItem('key');
+  // }
+
+  onKey(event: any): void {
+    // without type info
+    this.value = event.target.value;
+    console.log(this.value);
+    console.log(Number(this.value));
+    console.log(String(Number(this.value)).length);
+
+    this.value = String(Number(this.value));
+    this.length = String(Number(this.value)).length;
+    if (this.length === 10) {
+      this.maxlength = 10;
+    } else {
+      this.maxlength = 11;
+    }
+    if (this.length <= 10) {
+      for (let index = 0; index < 10 - this.length; index++) {
+        this.value = '0'.concat(this.value);
+      }
+
+      this.editForm.patchValue({
+        cik: this.value,
+      });
+    }
+  }
+
+  clear(): void {
+    //this.editForm.resetForm();
+    sessionStorage.removeItem('payment');
+    this.editForm.patchValue({
+      id: null,
+      cik: null,
+      ccc: null,
+      paymentAmout: null,
+      name: null,
+      email: null,
+      phone: null,
     });
-    // sessionStorage.setItem('key', 'value');
-    // const data = sessionStorage.getItem('key');
   }
 
   previousState(): void {

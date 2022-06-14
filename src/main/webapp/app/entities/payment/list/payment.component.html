@@ -27,9 +27,9 @@
           Your payment should be visible in EDGAR within the next 15 minutes
         </p>
         <p class="card-text fw-light">
-          <!-- Transaction ID: {{pay.id}}<br/> -->
-          Transaction ID: 1234<br />
-          Transaction Amount: $1.298.00
+          Transaction ID: {{ payment.transactionID }}<br />
+          <!-- Transaction ID: 1234<br /> -->
+          Transaction Amount: {{ payment.TransactionAmount }}
         </p>
         <p class="card-text fw-light">An email confirmation will be sent to you shortly</p>
         <a class="btn float-end btn-info px-5 py-2" routerLink="/payment/new">Close</a>

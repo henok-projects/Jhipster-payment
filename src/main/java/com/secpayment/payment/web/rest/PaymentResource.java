@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
@@ -24,6 +25,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api")
 public class PaymentResource {
 
+    private String dataValue = "https://mockbin.org/bin/165ce7bd-c7a6-4de8-bbf3-a5d04e2ba61c";
     private final Logger log = LoggerFactory.getLogger(PaymentResource.class);
 
     private static final String ENTITY_NAME = "payment";
@@ -134,9 +136,13 @@ public class PaymentResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of payments in body.
      */
     @GetMapping("/payments")
-    public List<Payment> getAllPayments() {
-        log.debug("REST request to get all Payments");
-        return paymentService.findAll();
+    public String getAllPayments() {
+        // log.debug("REST request to get all Payments");
+        // return paymentService.findAll();
+        final String uri = "https://mockbin.org/bin/165ce7bd-c7a6-4de8-bbf3-a5d04e2ba61c";
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.getForObject(uri, String.class);
+        return result;
     }
 
     /**

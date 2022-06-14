@@ -4,7 +4,7 @@ import { PaymentService } from '../service/payment.service';
 import { finalize } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { IPayment } from '../payment.model';
@@ -50,6 +50,8 @@ export class PaymentDetailComponent implements OnInit {
     this.loadAll();
   }
   previousState(): void {
+    sessionStorage.getItem('payment');
+
     window.history.back();
   }
 

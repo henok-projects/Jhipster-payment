@@ -1,11 +1,25 @@
 package com.secpayment.payment.service;
 
+import com.ingenico.connect.gateway.sdk.java.Client;
+import com.ingenico.connect.gateway.sdk.java.CommunicatorConfiguration;
+import com.ingenico.connect.gateway.sdk.java.Factory;
+import com.ingenico.connect.gateway.sdk.java.domain.definitions.Address;
+import com.ingenico.connect.gateway.sdk.java.domain.definitions.AmountOfMoney;
+import com.ingenico.connect.gateway.sdk.java.domain.hostedcheckout.CreateHostedCheckoutRequest;
+import com.ingenico.connect.gateway.sdk.java.domain.hostedcheckout.CreateHostedCheckoutResponse;
+import com.ingenico.connect.gateway.sdk.java.domain.hostedcheckout.definitions.HostedCheckoutSpecificInput;
+import com.ingenico.connect.gateway.sdk.java.domain.payment.definitions.Customer;
+import com.ingenico.connect.gateway.sdk.java.domain.payment.definitions.Order;
 import com.secpayment.payment.domain.Payment;
 import com.secpayment.payment.repository.PaymentRepository;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +60,61 @@ public class PaymentService {
         return paymentRepository.save(payment);
     }
 
+    // public CreateHostedCheckoutResponse pay(Payment payment) throws URISyntaxException, IOException {
+    //     try (Client client = getClient()) {
+    //         HostedCheckoutSpecificInput hostedCheckoutSpecificInput = new HostedCheckoutSpecificInput();
+
+    //         hostedCheckoutSpecificInput.setLocale("en_GB");
+    //         hostedCheckoutSpecificInput.setVariant("100");
+    //         //hostedCheckoutSpecificInput.setReturnUrl(this.returnUrl);
+    //         hostedCheckoutSpecificInput.setReturnUrl("http://localhost:8080/payment/list");
+    //         hostedCheckoutSpecificInput.setShowResultPage(false);
+
+    //         AmountOfMoney amountOfMoney = new AmountOfMoney();
+    //         amountOfMoney.setAmount(payment.getPaymentAmout());
+    //         //amountOfMoney.setAmount(100l);
+    //         //amountOfMoney.setAmount((long) paymentAmout.getPaymentAmout().intValue());
+    //         amountOfMoney.setCurrencyCode("USD");
+
+    //         Address billingAddress = new Address();
+    //         billingAddress.setCountryCode("US");
+
+    //         Customer customer = new Customer();
+    //         customer.setBillingAddress(billingAddress);
+    //         customer.setMerchantCustomerId("1234");
+
+    //         Order order = new Order();
+    //         order.setAmountOfMoney(amountOfMoney);
+    //         order.setCustomer(customer);
+
+    //         CreateHostedCheckoutRequest body = new CreateHostedCheckoutRequest();
+    //         body.setHostedCheckoutSpecificInput(hostedCheckoutSpecificInput);
+    //         body.setOrder(order);
+
+    //         CreateHostedCheckoutResponse response = client.merchant("1204").hostedcheckouts().create(body);
+    //         log.info("Worldline partial redirect url : {}", response.getPartialRedirectUrl());
+
+    //         //Console.log(response.getPartialRedirectUrl());
+
+    //         return response;
+    //     }
+
+    // }
+
+    // @Value("${spring.application.apiKeyId}")
+    //  String apiKeyId;
+
+    //  @Value("${spring.application.secretApiKey}")
+    //  String secretApiKey;
+    // private com.ingenico.connect.gateway.sdk.java.Client getClient() throws URISyntaxException {
+    //     String apiKey = System.getProperty("apiKeyId", this.apiKeyId);
+    //     String secretApi = System.getProperty("secretApiKey", this.secretApiKey);
+
+    //     URL propertiesUrl = getClass().getResource("/hostedpaymentpage.properties");
+    //     assert propertiesUrl != null;
+    //     CommunicatorConfiguration configuration = Factory.createConfiguration(propertiesUrl.toURI(), apiKey, secretApi);
+    //     return Factory.createClient(configuration);
+    // }
     /**
      * Partially update a payment.
      *

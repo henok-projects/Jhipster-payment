@@ -14,10 +14,28 @@ export class PaymentComponent implements OnInit {
   payments?: IPayment[];
   isLoading = false;
   pay: any;
+  //payment: any;
   payment: any;
-
+  paymentAmount: any;
   constructor(protected paymentService: PaymentService, protected modalService: NgbModal) {}
 
+  // loadAll(): void {
+  //   this.isLoading = true;
+
+  //   this.payment = sessionStorage.getItem("payment");
+  //   this.paymentAmount = JSON.parse(this.payment).paymentAmout;
+
+  //   this.paymentService.getTransactionId().subscribe({
+  //     next: (res: HttpResponse<string>) => {
+  //       this.isLoading = false;
+  //       this.payment = res.body ?? "";
+  //       this.pay = JSON.parse(JSON.stringify(this.payment));
+  //     },
+  //     error: () => {
+  //       this.isLoading = false;
+  //     },
+  //   });
+  // }
   loadAll(): void {
     this.isLoading = true;
 

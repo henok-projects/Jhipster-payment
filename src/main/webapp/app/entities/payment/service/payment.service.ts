@@ -6,6 +6,7 @@ import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IPayment, getPaymentIdentifier } from '../payment.model';
+import { IHostedPayment } from '../hostedpayment.model';
 
 export type EntityResponseType = HttpResponse<IPayment>;
 export type EntityArrayResponseType = HttpResponse<IPayment[]>;
@@ -13,11 +14,13 @@ export type EntityArrayResponseType = HttpResponse<IPayment[]>;
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/payments');
+  protected hostedPaymentUrl = this.applicationConfigService.getEndpointFor('api/paymentSB');
+  protected paymentAmout = this.applicationConfigService.getEndpointFor('api/amountOfMoney');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
-  create(payment: IPayment): Observable<EntityResponseType> {
-    return this.http.post<IPayment>(this.resourceUrl, payment, { observe: 'response' });
+  create(pay: IPayment): Observable<EntityResponseType> {
+    return this.http.post<IPayment>(this.resourceUrl, pay, { observe: 'response' });
   }
 
   update(payment: IPayment): Observable<EntityResponseType> {
@@ -39,6 +42,17 @@ export class PaymentService {
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+  getHostedPayment(): any {
+    return this.http.get<IHostedPayment>(`${this.hostedPaymentUrl}`, { observe: 'response' });
+  }
+
+  getPayment(payment: IPayment): Observable<EntityResponseType> {
+    return this.http.post<IPayment>(this.paymentAmout, payment, { observe: 'response' });
+  }
+  getTransactionId(req?: any): Observable<HttpResponse<string>> {
+    const options = createRequestOption(req);
+    return this.http.get<string>(`${this.resourceUrl}/mockbin`, { params: options, observe: 'response' });
   }
 
   addPaymentToCollectionIfMissing(paymentCollection: IPayment[], ...paymentsToCheck: (IPayment | null | undefined)[]): IPayment[] {

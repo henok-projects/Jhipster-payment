@@ -1,19 +1,40 @@
 package com.secpayment.payment.web.rest;
 
+import com.ingenico.connect.gateway.sdk.java.Client;
+import com.ingenico.connect.gateway.sdk.java.CommunicatorConfiguration;
+import com.ingenico.connect.gateway.sdk.java.Factory;
+import com.ingenico.connect.gateway.sdk.java.domain.definitions.Address;
+import com.ingenico.connect.gateway.sdk.java.domain.definitions.AmountOfMoney;
+import com.ingenico.connect.gateway.sdk.java.domain.hostedcheckout.CreateHostedCheckoutRequest;
+import com.ingenico.connect.gateway.sdk.java.domain.hostedcheckout.CreateHostedCheckoutResponse;
+import com.ingenico.connect.gateway.sdk.java.domain.hostedcheckout.definitions.HostedCheckoutSpecificInput;
+import com.ingenico.connect.gateway.sdk.java.domain.payment.definitions.Customer;
+import com.ingenico.connect.gateway.sdk.java.domain.payment.definitions.Order;
 import com.secpayment.payment.domain.Payment;
 import com.secpayment.payment.repository.PaymentRepository;
 import com.secpayment.payment.service.PaymentService;
 import com.secpayment.payment.web.rest.errors.BadRequestAlertException;
+import java.io.Console;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
+import java.net.URL;
 import java.util.Objects;
 import java.util.Optional;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -25,11 +46,14 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api")
 public class PaymentResource {
 
+    URI propertiesUrl;
     private String dataValue = "https://mockbin.org/bin/165ce7bd-c7a6-4de8-bbf3-a5d04e2ba61c";
     private final Logger log = LoggerFactory.getLogger(PaymentResource.class);
 
     private static final String ENTITY_NAME = "payment";
+    Payment paymentAmout;
 
+    //SetExpressCheckoutResponseType setExpressCheckoutResponseType;
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
@@ -42,6 +66,12 @@ public class PaymentResource {
         this.paymentRepository = paymentRepository;
     }
 
+    @Value("${spring.application.returnUrl}")
+    String returnUrl;
+
+    @Value("${spring.application.cancelUrl}")
+    String cancelUrl;
+
     /**
      * {@code POST  /payments} : Create a new payment.
      *
@@ -49,17 +79,86 @@ public class PaymentResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new payment, or with status {@code 400 (Bad Request)} if the payment has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/payments")
+    @PostMapping("/payment")
     public ResponseEntity<Payment> createPayment(@RequestBody Payment payment) throws URISyntaxException {
-        log.debug("REST request to save Payment : {}", payment);
+        System.out.println("--------------------------------------------");
+        log.debug("Maybe here");
+        log.debug("REST request to save Pay : {}", payment);
         if (payment.getId() != null) {
-            throw new BadRequestAlertException("A new payment cannot already have an ID", ENTITY_NAME, "idexists");
+            throw new BadRequestAlertException("A new pay cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Payment result = paymentService.save(payment);
+
+        Payment result = paymentRepository.save(payment);
+        SendMail mail = new SendMail();
+        mail.sendMail(payment.getEmail(), payment.getName());
+
         return ResponseEntity
             .created(new URI("/api/payments/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    @PostMapping("/amountOfMoney")
+    public String getPayment(@Valid @RequestBody Payment payment) {
+        this.paymentAmout = payment;
+        return "paymentAmout";
+    }
+
+    @GetMapping("/paymentSB")
+    public CreateHostedCheckoutResponse getRedirectUrl() throws URISyntaxException, IOException {
+        try (Client client = getClient()) {
+            HostedCheckoutSpecificInput hostedCheckoutSpecificInput = new HostedCheckoutSpecificInput();
+
+            hostedCheckoutSpecificInput.setLocale("en_GB");
+            hostedCheckoutSpecificInput.setVariant("100");
+            //hostedCheckoutSpecificInput.setReturnUrl(this.returnUrl);
+            hostedCheckoutSpecificInput.setReturnUrl("http://localhost:8080/payment/list");
+            hostedCheckoutSpecificInput.setShowResultPage(false);
+
+            AmountOfMoney amountOfMoney = new AmountOfMoney();
+            //amountOfMoney.setAmount(payment.getPaymentAmout());
+            amountOfMoney.setAmount(20000l);
+            //amountOfMoney.setAmount((long) paymentAmout.getPaymentAmout().intValue());
+            amountOfMoney.setCurrencyCode("USD");
+
+            Address billingAddress = new Address();
+            billingAddress.setCountryCode("US");
+
+            Customer customer = new Customer();
+            customer.setBillingAddress(billingAddress);
+            customer.setMerchantCustomerId("1234");
+
+            Order order = new Order();
+            order.setAmountOfMoney(amountOfMoney);
+            order.setCustomer(customer);
+
+            CreateHostedCheckoutRequest body = new CreateHostedCheckoutRequest();
+            body.setHostedCheckoutSpecificInput(hostedCheckoutSpecificInput);
+            body.setOrder(order);
+
+            CreateHostedCheckoutResponse response = client.merchant("1204").hostedcheckouts().create(body);
+            log.info("Worldline partial redirect url : {}", response.getPartialRedirectUrl());
+
+            //Console.log(response.getPartialRedirectUrl());
+
+            return response;
+        }
+    }
+
+    @Value("${spring.application.apiKeyId}")
+    String apiKeyId;
+
+    @Value("${spring.application.secretApiKey}")
+    String secretApiKey;
+
+    private com.ingenico.connect.gateway.sdk.java.Client getClient() throws URISyntaxException {
+        String apiKey = System.getProperty("apiKeyId", this.apiKeyId);
+        String secretApi = System.getProperty("secretApiKey", this.secretApiKey);
+
+        URL propertiesUrl = getClass().getResource("/hostedpaymentpage.properties");
+        assert propertiesUrl != null;
+        CommunicatorConfiguration configuration = Factory.createConfiguration(propertiesUrl.toURI(), apiKey, secretApi);
+        return Factory.createClient(configuration);
     }
 
     /**
@@ -137,8 +236,6 @@ public class PaymentResource {
      */
     @GetMapping("/payments")
     public String getAllPayments() {
-        // log.debug("REST request to get all Payments");
-        // return paymentService.findAll();
         final String uri = "https://mockbin.org/bin/165ce7bd-c7a6-4de8-bbf3-a5d04e2ba61c";
         RestTemplate restTemplate = new RestTemplate();
         String result = restTemplate.getForObject(uri, String.class);

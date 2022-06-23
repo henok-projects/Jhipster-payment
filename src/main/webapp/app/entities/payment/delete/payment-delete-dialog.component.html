@@ -1,4 +1,4 @@
-<form *ngIf="payment" name="deleteForm" (ngSubmit)="confirmCreate()">
+<form *ngIf="payment" name="deleteForm">
   <div class="modal-body" style="width: 450px; height: 180px; padding-right: -40px; padding-left: 40px">
     <jhi-alert-error></jhi-alert-error>
 
@@ -13,13 +13,7 @@
       <span>Cancel</span>
     </button>
 
-    <button
-      id="jhi-confirm-delete-payment"
-      data-cy="entityConfirmDeleteButton"
-      type="submit"
-      class="btn btn-primary"
-      [routerLink]="['/payment']"
-    >
+    <button id="jhi-confirm-delete-payment" data-cy="entityConfirmDeleteButton" type="submit" class="btn btn-primary" (click)="save()">
       <span>Conntinue</span>
     </button>
   </div>

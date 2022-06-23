@@ -166,16 +166,16 @@ public class AccountResource {
      * @return the current open sessions.
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the current open sessions couldn't be retrieved.
      */
-    @GetMapping("/account/sessions")
-    public List<PersistentToken> getCurrentSessions() {
-        return persistentTokenRepository.findByUser(
-            userRepository
-                .findOneByLogin(
-                    SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResourceException("Current user login not found"))
-                )
-                .orElseThrow(() -> new AccountResourceException("User could not be found"))
-        );
-    }
+    // @GetMapping("/account/sessions")
+    // public List<PersistentToken> getCurrentSessions() {
+    //     return persistentTokenRepository.findByUser(
+    //         userRepository
+    //             .findOneByLogin(
+    //                 SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResourceException("Current user login not found"))
+    //             )
+    //             .orElseThrow(() -> new AccountResourceException("User could not be found"))
+    //     );
+    // }
 
     /**
      * {@code DELETE  /account/sessions?series={series}} : invalidate an existing session.

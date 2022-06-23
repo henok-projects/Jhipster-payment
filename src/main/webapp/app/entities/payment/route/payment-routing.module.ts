@@ -10,7 +10,7 @@ import { PaymentDeleteDialogComponent } from '../delete/payment-delete-dialog.co
 
 const paymentRoute: Routes = [
   {
-    path: '',
+    path: 'list',
     component: PaymentComponent,
     // canActivate: [UserRouteAccessService],
   },

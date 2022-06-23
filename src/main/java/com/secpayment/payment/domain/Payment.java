@@ -2,6 +2,7 @@ package com.secpayment.payment.domain;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 /**
  * A Payment.
@@ -23,8 +24,9 @@ public class Payment implements Serializable {
     @Column(name = "ccc")
     private String ccc;
 
+    @NotNull
     @Column(name = "payment_amout")
-    private Integer paymentAmout;
+    private Long paymentAmout;
 
     @Column(name = "name")
     private String name;
@@ -76,16 +78,16 @@ public class Payment implements Serializable {
         this.ccc = ccc;
     }
 
-    public Integer getPaymentAmout() {
+    public Long getPaymentAmout() {
         return this.paymentAmout;
     }
 
-    public Payment paymentAmout(Integer paymentAmout) {
+    public Payment paymentAmout(Long paymentAmout) {
         this.setPaymentAmout(paymentAmout);
         return this;
     }
 
-    public void setPaymentAmout(Integer paymentAmout) {
+    public void setPaymentAmout(Long paymentAmout) {
         this.paymentAmout = paymentAmout;
     }
 

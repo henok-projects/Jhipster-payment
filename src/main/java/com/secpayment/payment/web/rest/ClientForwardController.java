@@ -14,4 +14,21 @@ public class ClientForwardController {
     public String forward() {
         return "forward:/";
     }
+
+    @GetMapping("/payment")
+    public String getPayments() {
+        //PaymentPageRequest request = new PaymentPageRequest();
+        // request.setMid(1234567890L);
+        // request.setTransactionChannel("Web Online");
+        // request.setOrderId("orderid");
+        // request.setAmount(123.0);
+        // request.setCurrency("SEK");
+        // request.setConsumerCountry("SE");
+        // request.setConsumerLanguage("sv");
+        // request.setReturnUrl("http://merchant.com?f=3&f=q");
+        // request.setAuthorizationType(AuthorizationType.PRE_AUTHORIZATION);
+
+        // String redirectUrl = paymentPageHandler.createRedirectUrl(request);
+        return "no";
+    }
 }

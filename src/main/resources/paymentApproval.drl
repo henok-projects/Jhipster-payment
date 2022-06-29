@@ -1,0 +1,47 @@
+package com.mycompany.myapp;
+
+import com.mycompany.myapp.domain.Pay;
+import com.mycompany.myapp.asynctest.CccValidator;
+import com.mycompany.myapp.asynctest.CikValidator;
+
+//global com.mycompany.myapp.domain.Pay payObject;
+
+rule "PAYMENT APPROVAL"
+
+    when
+       cikValidatorObject1: CikValidator($vCik1 : validCik1)
+       cikValidatorObject2: CikValidator($vCik2 : validCik2)
+       cikValidatorObject3: CikValidator($vCik3 : validCik3)
+       cikValidatorObject4: CikValidator($vCik4 : validCik4)
+       cikValidatorObject5: CikValidator($vCik5 : validCik5)
+
+       cccValidatorObject1: CccValidator($vCcc1 : validCcc1)
+       cccValidatorObject2: CccValidator($vCcc2 : validCcc2)
+       cccValidatorObject3: CccValidator($vCcc3 : validCcc3)
+       cccValidatorObject4: CccValidator($vCcc4 : validCcc4)
+       cccValidatorObject5: CccValidator($vCcc5 : validCcc5)
+
+       payObject:Pay(cik == $vCik1 || cik == $vCik2 || cik == $vCik3 || cik == $vCik4 || cik == $vCik5 && ccc == $vCcc1 || ccc == $vCcc2 || ccc == $vCcc3 || ccc == $vCcc4 || ccc == $vCcc5)
+    then
+       payObject.setApprovalStatus("Approve");
+end
+
+rule "PAYMENT DECLINE"
+
+    when
+       cikValidatorObject1: CikValidator($vCik1 : validCik1)
+       cikValidatorObject2: CikValidator($vCik2 : validCik2)
+       cikValidatorObject3: CikValidator($vCik3 : validCik3)
+       cikValidatorObject4: CikValidator($vCik4 : validCik4)
+       cikValidatorObject5: CikValidator($vCik5 : validCik5)
+
+       cccValidatorObject1: CccValidator($vCcc1 : validCcc1)
+       cccValidatorObject2: CccValidator($vCcc2 : validCcc2)
+       cccValidatorObject3: CccValidator($vCcc3 : validCcc3)
+       cccValidatorObject4: CccValidator($vCcc4 : validCcc4)
+       cccValidatorObject5: CccValidator($vCcc5 : validCcc5)
+
+       payObject:Pay(cik != $vCik1 && cik != $vCik2 && cik != $vCik3 && cik != $vCik4 && cik != $vCik5 || ccc != $vCcc1 && ccc != $vCcc2 && ccc != $vCcc3 && ccc != $vCcc4 && ccc != $vCcc5)
+    then
+       payObject.setApprovalStatus("Decline");
+end

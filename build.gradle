@@ -195,7 +195,24 @@ configurations {
             force 'org.liquibase:liquibase-core:4.6.1'
         }
     }
+    jaxb
+
 }
+
+
+task stage(type: Copy, dependsOn: [clean, build]) {
+    from jar.archivePath
+    into project.rootDir
+    rename {
+        'app.jar'
+    }
+}
+stage.mustRunAfter(clean)
+
+clean {
+    project.file('app.jar').delete()
+}
+
 
 repositories {
     // Local maven repository is required for libraries built locally with maven like development jhipster-bom.
@@ -203,6 +220,78 @@ repositories {
     mavenCentral()
     //jhipster-needle-gradle-repositories - JHipster will add additional repositories
 }
+// tag::wsdl[]
+task genJaxb {
+    ext.sourcesDir = "generated-sources/jaxb"
+    ext.classesDir = "classes/jaxb"
+    ext.schema = "src/main/resources/paypal.wsdl"
+
+	outputs.dir classesDir
+
+	doLast() {
+		project.ant {
+			taskdef name: "xjc", classname: "com.sun.tools.xjc.XJCTask",
+					classpath: configurations.jaxb.asPath
+			mkdir(dir: sourcesDir)
+			mkdir(dir: classesDir)
+
+				xjc(destdir: sourcesDir, schema: schema,
+						package: "com.secpayment.payment") {
+						arg(value: "-wsdl")
+					produces(dir: sourcesDir, includes: "**/*.java")
+				}
+
+				javac(destdir: classesDir, source: 1.8, target: 1.8, debug: true,
+						debugLevel: "lines,vars,source",
+						classpath: configurations.jaxb.asPath) {
+					src(path: sourcesDir)
+					include(name: "**/*.java")
+					include(name: "*.java")
+					}
+
+				copy(todir: classesDir) {
+						fileset(dir: sourcesDir, erroronmissingdir: false) {
+						exclude(name: "**/*.java")
+				}
+			}
+		}
+	}
+}
+// end::wsdl[]
+
+dependencies {
+// tag::dependency[]
+	implementation ('org.springframework.boot:spring-boot-starter-web-services') {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+	}
+	implementation 'org.springframework.ws:spring-ws-core'
+	// For Java 11:
+	implementation 'org.glassfish.jaxb:jaxb-runtime'
+	implementation(files(genJaxb.classesDir).builtBy(genJaxb))
+
+	jaxb "com.sun.xml.bind:jaxb-xjc:2.1.7"
+    implementation 'org.json:json:20211205'
+// end::dependency[]
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
+
+test {
+	useJUnitPlatform()
+}
+
+compileJava.dependsOn genJaxb
+// tag::bootjar[]
+bootJar {
+	baseName = 'gs-consuming-web-service'
+	version =  '0.0.1'
+}
+task afterEclipseImport {
+    dependsOn genJaxb
+}
+// end::bootjar[]
+
+
+
 
 dependencies {
     // import JHipster dependencies BOM
@@ -212,6 +301,16 @@ dependencies {
 
     // Use ", version: jhipsterDependenciesVersion, changing: true" if you want
     // to use a SNAPSHOT release instead of a stable release
+    implementation ('org.springframework.boot:spring-boot-starter-web-services') {
+	exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+}
+implementation 'org.springframework.ws:spring-ws-core'
+// For Java 11:
+implementation 'org.glassfish.jaxb:jaxb-runtime'
+implementation(files(genJaxb.classesDir).builtBy(genJaxb))
+
+jaxb "com.sun.xml.bind:jaxb-xjc:2.1.7"
+    implementation group: 'org.json', name: 'json', version: '20180130'
     implementation group: "tech.jhipster", name: "jhipster-framework"
     implementation "javax.annotation:javax.annotation-api"
     implementation "org.springframework.boot:spring-boot-starter-cache"
@@ -257,21 +356,10 @@ dependencies {
     implementation ("org.springdoc:springdoc-openapi-webmvc-core")
     implementation "mysql:mysql-connector-java"
     implementation group: 'com.worldline-solutions', name: 'onlinepayments-sdk-java', version: '3.5.0'
-    // implementation 'com.worldline.sips:payment-sdk:1.4.3'
-    // implementation 'com.ingenico.connect.gateway:connect-sdk-java:6.31.0'
-     //https://mvnrepository.com/artifact/com.worldline-solutions/onlinepayments-sdk-java
-    // implementation 'com.worldline-solutions:onlinepayments-sdk-java:3.5.0'
-    // https://mavenlibs.com/maven/dependency/com.worldline.sips/payment-sdk-common
-    // implementation 'com.worldline.sips:payment-sdk-common:1.4.3'
-    // https://mvnrepository.com/artifact/com.worldline.payments/payment-api
-// https://mvnrepository.com/artifact/com.worldline.payments/payment-api
-implementation 'com.worldline.payments:payment-api:4.8.6'
-
-    //implementation group: 'com.worldline-solutions', name: 'onlinepayments-sdk-java', version: '3.5.0'
-    // implementation "com.ingenico.connect.gateway:connect-sdk-java:6.31.0"
+    implementation 'com.worldline.payments:payment-api:4.8.6'
+    implementation group: 'com.paypal.sdk',name:"merchantsdk",version:'2.15.122'
     liquibaseRuntime "mysql:mysql-connector-java"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
-    // implementation "com.worldline.payments:payment-api:4.4.1"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:${hibernateVersion}"
     annotationProcessor "org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}"
@@ -283,6 +371,35 @@ implementation 'com.worldline.payments:payment-api:4.8.6'
     testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}"
     testImplementation "com.h2database:h2"
     developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
+
+
+    // implementation 'com.sun.xml.bind:jaxb-impl:3.0.2'
+    // implementation("org.springframework.ws:spring-ws-core")
+    // jaxb 'com.sun.xml.bind:jaxb-xjc:3.0.2'
+    // //implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    // implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+    // implementation("wsdl4j:wsdl4j:1.6.3")
+    // implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.0'
+    // implementation(files(genJaxb.classesDir).builtBy(genJaxb))
+// implementation ('org.springframework.boot:spring-boot-starter-web-services') {
+// 	exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+// }
+// implementation 'org.springframework.ws:spring-ws-core'
+// // For Java 11:
+// implementation 'org.glassfish.jaxb:jaxb-runtime'
+// implementation(files(genJaxb.classesDir).builtBy(genJaxb))
+
+// jaxb "com.sun.xml.bind:jaxb-xjc:2.1.7"
+
+
+// jaxb "com.sun.xml.bind:jaxb-xjc:2.3.1"
+// jaxb "com.sun.xml.bind:jaxb-xjc:2.3.1"
+// jaxb "com.sun.xml.bind:jaxb-impl:2.3.1"
+// jaxb "javax.xml.bind:jaxb-api:2.3.1"
+// jaxb "org.glassfish.jaxb:jaxb-core:2.3.0.1"
+
+
+
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 

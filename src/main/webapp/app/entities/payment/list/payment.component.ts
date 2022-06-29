@@ -4,7 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { IPayment } from '../payment.model';
 import { PaymentService } from '../service/payment.service';
-import { PaymentDeleteDialogComponent } from '../delete/payment-delete-dialog.component';
+import { PaymentCreateDialogComponent } from '../create/payment-create-dialog.component';
 
 @Component({
   selector: 'jhi-payment',
@@ -45,7 +45,7 @@ export class PaymentComponent implements OnInit {
         this.pay = res.body ?? '';
 
         this.payment = JSON.parse(JSON.stringify(this.pay));
-        // this.payments = res.body ?? "";
+        this.payment = res.body ?? '';
       },
       error: () => {
         this.isLoading = false;
@@ -62,7 +62,7 @@ export class PaymentComponent implements OnInit {
   }
 
   delete(payment: IPayment): void {
-    const modalRef = this.modalService.open(PaymentDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(PaymentCreateDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.payment = payment;
     // unsubscribe not needed because closed completes on modal close
     modalRef.closed.subscribe(reason => {

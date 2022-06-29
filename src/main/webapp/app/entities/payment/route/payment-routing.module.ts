@@ -6,7 +6,7 @@ import { PaymentComponent } from '../list/payment.component';
 import { PaymentDetailComponent } from '../detail/payment-detail.component';
 import { PaymentUpdateComponent } from '../update/payment-update.component';
 import { PaymentRoutingResolveService } from './payment-routing-resolve.service';
-import { PaymentDeleteDialogComponent } from '../delete/payment-delete-dialog.component';
+import { PaymentCreateDialogComponent } from '../create/payment-create-dialog.component';
 
 const paymentRoute: Routes = [
   {
@@ -24,7 +24,7 @@ const paymentRoute: Routes = [
   },
   {
     path: 'delete',
-    component: PaymentDeleteDialogComponent,
+    component: PaymentCreateDialogComponent,
     resolve: {
       payment: PaymentRoutingResolveService,
     },

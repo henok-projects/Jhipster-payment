@@ -16,11 +16,25 @@ export class PaymentService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/payments');
   protected hostedPaymentUrl = this.applicationConfigService.getEndpointFor('api/paymentSB');
   protected paymentAmout = this.applicationConfigService.getEndpointFor('api/amountOfMoney');
+  protected ppToken = this.applicationConfigService.getEndpointFor('api/paypal');
+  protected EC = this.applicationConfigService.getEndpointFor('api/paypalGetEC');
+  protected doEC = this.applicationConfigService.getEndpointFor('api/paypalDoEC');
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
   create(pay: IPayment): Observable<EntityResponseType> {
     return this.http.post<IPayment>(this.resourceUrl, pay, { observe: 'response' });
+  }
+  getPpToken(): any {
+    return this.http.get<any>(`${this.ppToken}`, { observe: 'response' });
+  }
+
+  getEC(): any {
+    return this.http.get<any>(`${this.EC}`, { observe: 'response' });
+  }
+
+  getDoEC(): any {
+    return this.http.get<any>(`${this.doEC}`, { observe: 'response' });
   }
 
   update(payment: IPayment): Observable<EntityResponseType> {

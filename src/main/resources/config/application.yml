@@ -95,7 +95,8 @@ spring:
     name: payment
     apiKeyId: 950d664708f6efff
     secretApiKey: DX5M0fPk4Dcqf6ISDlfsfyNvxa6WkyoeNtmGqJru9bk=
-    returnUrl: http://localhost:8080/payment
+    paypalUrl: https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=
+    returnUrl: http://localhost:8080/payment/list
     cancelUrl: http://localhost:8080
     bootstrap-servers: localhost:9092
   profiles:

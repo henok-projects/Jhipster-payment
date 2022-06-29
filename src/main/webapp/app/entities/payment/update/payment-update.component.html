@@ -30,7 +30,6 @@
               <!-- onblur="while(this.value.length<parseInt(this.getAttribute('maxlength')))this.value='0'+this.value;" -->
               <input
                 type="number"
-                placeholder="123"
                 class="form-control"
                 name="cik"
                 id="field_cik"
@@ -49,16 +48,7 @@
           <div class="form-group">
             <label class="form-label" for="field_ccc"><h6 style="margin-top: 15px">CCC*</h6></label>
             <div class="input-group" style="width: 250px">
-              <input
-                type="password"
-                class="form-control"
-                name="ccc"
-                id="field_ccc"
-                data-cy="ccc"
-                formControlName="ccc"
-                placeholder="1234"
-                required
-              />
+              <input type="password" class="form-control" name="ccc" id="field_ccc" data-cy="ccc" formControlName="ccc" required />
             </div>
             <small class="form-text text-danger" *ngIf="editForm.get('ccc')?.errors?.required"> This field is required. </small>
             <small class="form-text text-danger" *ngIf="editForm.get('ccc')?.errors?.pattern">
@@ -70,13 +60,11 @@
             <label class="form-label" for="field_amount"><h6 style="margin-top: 15px">Payment Amount*</h6></label>
             <div class="input-group" style="width: 250px">
               <input
-                type="number"
                 class="form-control"
                 name="paymentAmount"
                 id="field_paymentAmout"
                 data-cy="paymentAmout"
                 formControlName="paymentAmout"
-                placeholder="12345"
                 required
               />
             </div>
@@ -90,16 +78,7 @@
           <div class="form-group">
             <label class="form-label" for="field_name"><h6 style="margin-top: 15px">Name*</h6></label>
             <div class="input-group" style="width: 350px">
-              <input
-                type="text"
-                class="form-control"
-                name="name"
-                id="field_name"
-                data-cy="name"
-                formControlName="name"
-                placeholder="test"
-                required
-              />
+              <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" required />
             </div>
             <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required"> This field is required. </small>
           </div>
@@ -107,16 +86,7 @@
           <div class="form-group">
             <label class="form-label" for="field_email"><h6 style="margin-top: 15px">Email*</h6></label>
             <div class="input-group" style="width: 350px">
-              <input
-                type="email"
-                class="form-control"
-                name="email"
-                id="field_email"
-                data-cy="email"
-                formControlName="email"
-                placeholder="test@gmail.com"
-                required
-              />
+              <input type="email" class="form-control" name="email" id="field_email" data-cy="email" formControlName="email" required />
             </div>
             <small class="form-text text-danger" *ngIf="editForm.get('email')?.errors?.required"> This field is required. </small>
             <small class="form-text text-danger" *ngIf="editForm.get('email')?.errors?.email">
@@ -127,16 +97,7 @@
           <div class="form-group">
             <label class="form-label" for="field_phone"><h6 style="margin-top: 15px">Phone*</h6></label>
             <div class="input-group" style="width: 350px">
-              <input
-                type="number"
-                class="form-control"
-                name="phone"
-                id="field_phone"
-                data-cy="phone"
-                formControlName="phone"
-                placeholder="1234567890"
-                required
-              />
+              <input type="number" class="form-control" name="phone" id="field_phone" data-cy="phone" formControlName="phone" required />
             </div>
             <small class="form-text text-danger" *ngIf="editForm.get('phone')?.errors?.required"> This field is required. </small>
           </div>

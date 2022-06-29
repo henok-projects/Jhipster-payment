@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { IPayment } from '../payment.model';
-import { PaymentDeleteDialogComponent } from '../delete/payment-delete-dialog.component';
+import { PaymentCreateDialogComponent } from '../create/payment-create-dialog.component';
 
 @Component({
   selector: 'jhi-payment-detail',
@@ -56,7 +56,7 @@ export class PaymentDetailComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
-    const modalRef = this.modalService.open(PaymentDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(PaymentCreateDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.payment = this.payment;
     modalRef.closed.subscribe(reason => {
       if (reason === 'save') {

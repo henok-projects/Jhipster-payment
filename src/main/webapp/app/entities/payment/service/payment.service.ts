@@ -25,8 +25,8 @@ export class PaymentService {
   create(pay: IPayment): Observable<EntityResponseType> {
     return this.http.post<IPayment>(this.resourceUrl, pay, { observe: 'response' });
   }
-  getPpToken(): any {
-    return this.http.get<any>(`${this.ppToken}`, { observe: 'response' });
+  getPpToken(pay: IPayment): any {
+    return this.http.post<any>(`${this.ppToken}`, pay, { observe: 'response' });
   }
 
   getEC(): any {

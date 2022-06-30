@@ -50,7 +50,6 @@ export class PaymentCreateDialogComponent {
     this.paymentService.getPayment(this.data).subscribe((msg: any) => {
       const dt = msg;
       console.log('Sending payment amount to paypal : ', dt);
-      this.confirmCreate();
     });
 
     this.startTimer();
@@ -79,28 +78,27 @@ export class PaymentCreateDialogComponent {
         //   },
         // });
 
-        this.paymentService.getPpToken().subscribe((ppToken: any) => {
-          this.token = JSON.stringify(ppToken);
-          this.ppUrl = JSON.parse(this.token);
-          window.location.href = this.ppUrl.body;
-        });
+        this.save();
 
         // this.router.navigate(['/payment']);
-        this.activeModal.dismiss();
-        clearInterval(this.interval);
       }
       return this.time;
     }, 1000);
   }
 
   save(): void {
-    this.paymentService.getPpToken().subscribe((ppToken: any) => {
-      this.token = JSON.stringify(ppToken);
-      this.ppUrl = JSON.parse(this.token);
-      window.location.href = this.ppUrl.body;
-    });
+    this.pay = sessionStorage.getItem('payment');
+    this.payment = JSON.parse(this.pay);
+    this.length = this.payment.cik.length;
 
+    for (let index = 0; index < 10 - this.length; index++) {
+      this.payment.cik = '0'.concat(this.payment.cik);
+    }
+
+    // this.pay = sessionStorage.removeItem('payment');
+    this.subscribeToSaveResponse(this.paymentService.getPpToken(this.payment));
     this.activeModal.dismiss();
+    clearInterval(this.interval);
 
     // this.paymentService.getHostedPayment().subscribe({
     //   next: (res: HttpResponse<IHostedPayment>) => {
@@ -119,23 +117,16 @@ export class PaymentCreateDialogComponent {
     const jsonData = JSON.stringify(data);
     sessionStorage.setItem('formData', jsonData);
   }
-  confirmCreate(): void {
-    // clearInterval(this.interval);
-    this.pay = sessionStorage.getItem('payment');
-    this.payment = JSON.parse(this.pay);
-    this.length = this.payment.cik.length;
 
-    for (let index = 0; index < 10 - this.length; index++) {
-      this.payment.cik = '0'.concat(this.payment.cik);
-    }
-
-    this.subscribeToSaveResponse(this.paymentService.create(this.payment));
-    this.pay = sessionStorage.removeItem('payment');
-  }
-
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<IPayment>>): void {
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<any>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
-      next: () => this.onSaveSuccess(),
+      next: (res: any) => {
+        this.onSaveSuccess();
+
+        this.token = JSON.stringify(res);
+        this.ppUrl = JSON.parse(this.token);
+        window.location.href = this.ppUrl.body;
+      },
       error: () => this.onSaveError(),
     });
   }

@@ -38,6 +38,8 @@ export class PaymentComponent implements OnInit {
   // }
   loadAll(): void {
     this.isLoading = true;
+    this.pay = sessionStorage.getItem('payment');
+    this.paymentAmount = JSON.parse(this.pay).paymentAmout;
 
     this.paymentService.query().subscribe({
       next: (res: HttpResponse<string>) => {
@@ -45,7 +47,6 @@ export class PaymentComponent implements OnInit {
         this.pay = res.body ?? '';
 
         this.payment = JSON.parse(JSON.stringify(this.pay));
-        this.payment = res.body ?? '';
       },
       error: () => {
         this.isLoading = false;

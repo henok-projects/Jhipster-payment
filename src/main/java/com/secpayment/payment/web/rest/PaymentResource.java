@@ -55,7 +55,6 @@ public class PaymentResource {
     //SetExpressCheckoutResponseType setExpressCheckoutResponse;
 
     private static final String ENTITY_NAME = "payment";
-    Payment paymentAmout;
 
     //SetExpressCheckoutResponseType setExpressCheckoutResponseType;
     @Value("${jhipster.clientApp.name}")
@@ -95,35 +94,8 @@ public class PaymentResource {
             .body(result);
     }
 
-    //    @PostMapping("/payment")
-    //    public ResponseEntity<Payment> createPayment(@RequestBody Payment payment) throws URISyntaxException {
-    //        System.out.println("--------------------------------------------");
-    //        log.debug("Maybe here");
-    //        log.debug("REST request to save Pay : {}", payment);
-    //        if (payment.getId() != null) {
-    //            throw new BadRequestAlertException("A new pay cannot already have an ID", ENTITY_NAME, "idexists");
-    //        }
-    //        Payment result = paymentService.save(payment);
-    //        //Payment result = paymentRepository.save(payment);
-    ////        SendMail mail = new SendMail();
-    ////        mail.sendMail(payment.getEmail(), payment.getName());
-    //
-    //        return ResponseEntity
-    //            .created(new URI("/api/payment/" + result.getId()))
-    //            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
-    //            .body(result);
-    //    }
-
-    //    @GetMapping("")
-    //    public String getPayment(@Valid @RequestBody Payment payment) {
-    //        this.paymentAmout = payment;
-    //        return "paymentAmout";
-    //    }
-
     @GetMapping("/paymentSB")
     public CreateHostedCheckoutResponse getRedirectUrl() throws URISyntaxException, IOException {
-        Payment payment = new Payment();
-        this.paymentAmout = payment;
         try (Client client = getClient()) {
             HostedCheckoutSpecificInput hostedCheckoutSpecificInput = new HostedCheckoutSpecificInput();
             hostedCheckoutSpecificInput.setLocale("en_GB");
@@ -187,12 +159,13 @@ public class PaymentResource {
     @Value("${spring.application.cancelUrl}")
     String cancelUrl;
 
-    @GetMapping("/paypal")
-    public String setExpressCheckout()
+    @PostMapping("/paypal")
+    public String setExpressCheckout(@RequestBody Payment payment)
         throws PayPalException, ClientActionRequiredException, SSLConfigurationException, MissingCredentialException, InvalidResponseDataException, InvalidCredentialException, IOException, HttpErrorException, InterruptedException, SAXException, ParserConfigurationException {
-        //String paymentAmount = paymentAmout.getPaymentAmout();
+        paymentRepository.save(payment);
+
         Long payerId = 5L;
-        //String paymentAmount = paymentAmout.getPaymentAmout();
+        String paymentAmount = payment.getPaymentAmout();
 
         String returnURL = this.returnUrl;
         String cancelURL = this.cancelUrl;
@@ -212,7 +185,7 @@ public class PaymentResource {
         paymentDetails.setOrderDescription("PayGov integration with paypal");
         paymentDetails.setInvoiceID("INVOICE-" + Math.random());
         BasicAmountType orderTotal = new BasicAmountType();
-        orderTotal.setValue("2000");
+        orderTotal.setValue(paymentAmount);
         orderTotal.setCurrencyID(currencyCode);
         paymentDetails.setOrderTotal(orderTotal);
         paymentDetails.setPaymentAction(paymentAction);

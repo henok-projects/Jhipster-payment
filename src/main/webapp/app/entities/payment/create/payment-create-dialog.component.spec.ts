@@ -37,7 +37,7 @@ describe('Payment Management Delete Component', () => {
         jest.spyOn(service, 'delete').mockReturnValue(of(new HttpResponse({ body: {} })));
 
         // WHEN
-        comp.confirmCreate();
+        // confirmCreate();
         tick();
 
         // THEN
